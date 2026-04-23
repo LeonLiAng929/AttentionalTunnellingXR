@@ -32,7 +32,7 @@ public class SpatialAnchorManager : MonoBehaviour
     {
         
         Vector3 position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
-        position.y = 0.5f;
+        //position.y = 0.5f;
         OVRSpatialAnchor workingAnchor = Instantiate(anchorPrefab, position, Quaternion.identity);
         canvas = workingAnchor.gameObject.GetComponentInChildren<Canvas>();
         uuidText = canvas.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();

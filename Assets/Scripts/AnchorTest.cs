@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using Meta.XR.BuildingBlocks;
 using TMPro;
+using UnityEngine.TextCore.Text;
 
 public class AnchorTest : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class AnchorTest : MonoBehaviour
     private string saveFilePath;
     private GymAnchorData savedData = new GymAnchorData();
     private Guid currentSessionAnchorUuid;
-
+    
     private void Awake()
     {
         saveFilePath = Path.Combine(Application.persistentDataPath, "gym_anchors.json");
@@ -57,34 +58,6 @@ public class AnchorTest : MonoBehaviour
             anchorCore.OnAnchorEraseCompleted.RemoveListener(HandleAnchorErased);
             anchorCore.OnAnchorsLoadCompleted.RemoveListener(HandleAnchorsLoaded);
             anchorCore.OnAnchorsEraseAllCompleted.RemoveListener(HandleAllAnchorsErased);
-        }
-    }
-
-    private void Update()
-    {
-        if (OVRInput.GetDown(OVRInput.RawButton.A))
-        {
-            // FIX 1: Use true World Position and Rotation from the controller's transform
-            if (rightControllerTransform != null)
-            {
-                CreateGymAnchor(rightControllerTransform.position, rightControllerTransform.rotation);
-            }
-            else
-            {
-                LogDebug("Error: Assign the RightControllerAnchor in the Inspector!");
-            }
-        }
-        else if (OVRInput.GetDown(OVRInput.RawButton.B))
-        {
-            EraseCurrentAnchor();
-        }
-        else if (OVRInput.GetDown(OVRInput.RawButton.RThumbstick))
-        {
-            LoadAnchorsFromDisk();
-        }
-        else if (OVRInput.GetDown(OVRInput.RawButton.LThumbstick)) // NEW: Left Controller Y Button
-        {
-            EraseAllGymAnchors(); // Wipes the whole gym
         }
     }
 
@@ -235,7 +208,7 @@ public class AnchorTest : MonoBehaviour
         Debug.Log(message);
         if (debugText != null)
         {
-            debugText.text = message;
+            debugText.text = message + "\n" + rightControllerTransform.position.ToString();
         }
     }
 }
