@@ -72,7 +72,7 @@ public class StudyManager : MonoBehaviour
 
     private void Start()
     {
-        PathMapping();
+        //PathMapping();
     }
 
     // Update is called once per frame
@@ -108,8 +108,8 @@ public class StudyManager : MonoBehaviour
 
     public void PathMapping()
     {
-        //List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
-        List<Transform> anchorList = debugAnchorList;
+        List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
+        //List<Transform> anchorList = debugAnchorList;
         
         
         ClearPaths();
@@ -160,6 +160,7 @@ public class StudyManager : MonoBehaviour
         }
 
         StartRoute();
+        VisualTaskManager.instance.PreInstantiateCanvases();
     }
 
     public void ClearPaths()

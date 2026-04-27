@@ -19,7 +19,7 @@ public class HazardBehaviour : MonoBehaviour
     // Speeds in m/s (km/h divided by 3.6)
     private const float SPEED_STATIC = 0f;
     private const float SPEED_SLOW = 4.5f / 3.6f; // 1.25 m/s
-    private const float SPEED_FAST = 9.0f / 3.6f; // 2.5 m/s
+    private const float SPEED_FAST = 15f / 3.6f; // 2.5 m/s
 
     /// <summary>
     /// Initializes the hazard and calculates its interception trajectory.

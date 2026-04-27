@@ -89,7 +89,7 @@ public class DimensionVisualiser : MonoBehaviour
             Destroy(go);
         }
         anchorList.Add(anchor);
-        for (int i = 0; i < anchorList.Count; i++)
+        /*for (int i = 0; i < anchorList.Count; i++)
         {
             for (int j = i + 1; j < anchorList.Count; j++)
             {
@@ -106,7 +106,7 @@ public class DimensionVisualiser : MonoBehaviour
                 dimensionText.gameObject.transform.position = midPoint;
                 visualiserObjects.Add(go);
             }
-        }
+        }*/
     }
 
     private void OnDisable()

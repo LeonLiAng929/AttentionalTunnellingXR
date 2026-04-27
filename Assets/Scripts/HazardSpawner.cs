@@ -25,7 +25,8 @@ public class HazardSpawner : MonoBehaviour
     private float currentSpawnInterval = 0f;
     private GameObject currentHazardInstance = null;
     
-    private bool isPhaseComplete = false;
+    public bool isPhaseComplete = false;
+    public bool isSpawningActive = false;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class HazardSpawner : MonoBehaviour
         HandleDestructionLifecycle();
 
         if (isPhaseComplete) return;
+        if (!isSpawningActive) return;
 
         timer += Time.deltaTime;
         
@@ -175,7 +177,8 @@ public class HazardSpawner : MonoBehaviour
     {
         //if (DimensionVisualiser.instance == null || DimensionVisualiser.instance.anchorList == null || DimensionVisualiser.instance.anchorList.Count == 0) return true;
 
-        List<Transform> anchorList = studyManager.debugAnchorList;
+        //List<Transform> anchorList = studyManager.debugAnchorList;
+        List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
         float minX = float.MaxValue, maxX = float.MinValue;
         float minZ = float.MaxValue, maxZ = float.MinValue;
 

@@ -25,6 +25,7 @@ public class VisualTaskManager : MonoBehaviour
     public Vector3 ambientScale;
     public float  ambientBackwardOffset = 1.5f;
     public GameObject visPrefab;
+    public bool isUpdatingActive = false;
 
     private List<LineChartVisualizer> activeVisualizers = new List<LineChartVisualizer>();
 
@@ -38,23 +39,23 @@ public class VisualTaskManager : MonoBehaviour
 
     void Start()
     {
-        PreInstantiateCanvases();
+        //PreInstantiateCanvases();
     }
 
-    private void PreInstantiateCanvases()
+    public void PreInstantiateCanvases()
 {
     // Instantiate Ambient canvases
     if (StudyManager.instance != null)
     {
-        List<Transform> anchorList = StudyManager.instance.debugAnchorList;
-        
+        //List<Transform> anchorList = StudyManager.instance.debugAnchorList;
+        List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
         if (anchorList != null && anchorList.Count > 0)
         {
             // Calculate centroid
             Vector3 centroid = Vector3.zero;
-            foreach (Transform t in anchorList)
+            foreach (var t in anchorList)
             {
-                centroid += t.position;
+                centroid += t.transform.position;
             }
             centroid /= anchorList.Count;
 
@@ -75,24 +76,53 @@ public class VisualTaskManager : MonoBehaviour
                 // This connects the final anchor back to the first anchor to close the physical loop.
                 int nextIndex = (i + 1) % anchorList.Count;
 
-                Vector3 p1 = anchorList[i].position;
-                Vector3 p2 = anchorList[nextIndex].position;
+                Vector3 p1 = anchorList[i].transform.position;
+                Vector3 p2 = anchorList[nextIndex].transform.position;
                 Vector3 midpoint = (p1 + p2) / 2f;
                 
                 // Treat the centroid as the focal lookAtTarget to face the center of the room
                 GameObject ambientObj = Instantiate(visPrefab, ambientCanvasesContainer);
                 CanvasAnchorBehaviour cab = ambientObj.GetComponent<CanvasAnchorBehaviour>();
-                cab.InitializeAmbient(midpoint, centroid, ambientScale, backwardOffset: ambientBackwardOffset);
+                cab.InitializeAmbient(midpoint, centroid, ambientScale, .2f ,backwardOffset: ambientBackwardOffset);
                 ambientCanvases.Add(ambientObj);
+                
+
             }
         }
     }
 
-    SetMode();
+    //SetMode(); // Handled by StudyFlowManager
     // Deactivate all to start cleanly
-    //DeactivateAllCanvases();
+    DeactivateAllCanvases();
 }
 
+
+    public void SetModeByConditionIndex(int index)
+    {
+        if (index == -1) // Trial Mode
+        {
+            peripersonalCanvas.SetActive(true);
+            actionCanvas.SetActive(true);
+            focalCanvas.SetActive(true);
+            ambientCanvases.ForEach(ac => ac.SetActive(true));
+            
+            activeVisualizers.Clear();
+            if (peripersonalCanvas != null) activeVisualizers.Add(peripersonalCanvas.GetComponent<LineChartVisualizer>());
+            if (actionCanvas != null) activeVisualizers.Add(actionCanvas.GetComponent<LineChartVisualizer>());
+            if (focalCanvas != null) activeVisualizers.Add(focalCanvas.GetComponent<LineChartVisualizer>());
+            foreach (var ac in ambientCanvases) 
+            {
+                if (ac != null) activeVisualizers.Add(ac.GetComponent<LineChartVisualizer>());
+            }
+            activeVisualizers.RemoveAll(v => v == null);
+            GenerateNewTrial();
+        }
+        else
+        {
+            currentStudyMode = (CanvasAnchorBehaviour.AnchorMode)index;
+            SetMode();
+        }
+    }
 
     public void SetMode()
     {
@@ -155,7 +185,7 @@ public class VisualTaskManager : MonoBehaviour
     }
 
 
-    private void GenerateNewTrial()
+    public void GenerateNewTrial()
     {
         float[] line1 = new float[5];
         float[] line2 = new float[5];
@@ -220,6 +250,8 @@ public class VisualTaskManager : MonoBehaviour
 
     void Update()
     {
+        if (!isUpdatingActive) return;
+
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
