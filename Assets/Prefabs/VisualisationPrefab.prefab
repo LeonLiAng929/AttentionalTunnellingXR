@@ -388,7 +388,9 @@ MonoBehaviour:
   colorLine2: {r: 0, g: 0, b: 1, a: 1}
   circleMarkerPrefab: {fileID: 3768211404052701663}
   linePrefab: {fileID: 4789233889487061283}
-  lineThickness: 0
+  highlightMaterial1: {fileID: 2100000, guid: 076f46e3a3e146042af29346bb49ce45, type: 2}
+  highlightMaterial2: {fileID: 2100000, guid: facebdebd90f2a945b9f47ef16dae913, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 2207e985f99c508488f99b59c656f26e, type: 2}
   timerBar: {fileID: 4040581846341367228}
   lines1:
   - {fileID: 0}

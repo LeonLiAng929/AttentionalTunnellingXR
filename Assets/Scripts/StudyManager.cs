@@ -29,7 +29,7 @@ public class StudyManager : MonoBehaviour
     public Path currentPath;
     public Path nextPath;
     
-    public float proximityThreshold = 0.5f;
+    public float proximityThreshold = 2f;
 
     private bool routeActive = false;
     
@@ -72,7 +72,7 @@ public class StudyManager : MonoBehaviour
 
     private void Start()
     {
-        //PathMapping();
+        
     }
 
     // Update is called once per frame
@@ -109,7 +109,7 @@ public class StudyManager : MonoBehaviour
     public void PathMapping()
     {
         List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
-        //List<Transform> anchorList = debugAnchorList;
+        //List<Transform> anchorList = debugAnchorList; //for debug only
         
         
         ClearPaths();
@@ -146,9 +146,9 @@ public class StudyManager : MonoBehaviour
                 float distance = heading.magnitude; 
                 Vector3 direction = heading.normalized;
                 Quaternion rotation = Quaternion.LookRotation(direction);
-                Debug.Log(midPoints.Count);
-                Debug.Log(i + " " + j);
-                GameObject temp = Instantiate(pathPrefab, midPoint, rotation, anchorList[j].transform);
+                /*Debug.Log(midPoints.Count);
+                Debug.Log(i + " " + j);*/
+                GameObject temp = Instantiate(pathPrefab, midPoint, rotation);
                 foreach (Transform t in temp.GetComponentsInChildren<Transform>())
                 {
                     t.localScale = new Vector3(t.localScale.x, t.localScale.y, distance);
@@ -242,11 +242,26 @@ public class StudyManager : MonoBehaviour
         {
             currentPath.pathObject.SetActive(true);
             HighlightPath(currentPath);
+            
+            // Deterministically orient the path to match the user's traversal direction
+            Vector3 currentDir = midPoints[nextNodeIndex] - midPoints[currentNodeIndex];
+            if (currentDir != Vector3.zero)
+            {
+                currentPath.pathObject.transform.rotation = Quaternion.LookRotation(currentDir.normalized);
+            }
         }
+        
         if (nextPath != null)
         {
             nextPath.pathObject.SetActive(true);
             HighlightPath(nextPath);
+            
+            // Deterministically orient the upcoming path
+            Vector3 nextDir = midPoints[upcomingNodeIndex] - midPoints[nextNodeIndex];
+            if (nextDir != Vector3.zero)
+            {
+                nextPath.pathObject.transform.rotation = Quaternion.LookRotation(nextDir.normalized);
+            }
         }
     }
 

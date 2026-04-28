@@ -39,7 +39,7 @@ public class VisualTaskManager : MonoBehaviour
 
     void Start()
     {
-        //PreInstantiateCanvases();
+        
     }
 
     public void PreInstantiateCanvases()
@@ -47,7 +47,8 @@ public class VisualTaskManager : MonoBehaviour
     // Instantiate Ambient canvases
     if (StudyManager.instance != null)
     {
-        //List<Transform> anchorList = StudyManager.instance.debugAnchorList;
+        //List<Transform> anchorList = StudyManager.instance.debugAnchorList; // DebugOnly
+        
         List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
         if (anchorList != null && anchorList.Count > 0)
         {
@@ -69,11 +70,8 @@ public class VisualTaskManager : MonoBehaviour
             }*/
 
             // Midpoint Canvases (Based on adjacent anchors)
-            // We loop through the anchors to place a canvas between each consecutive pair
             for (int i = 0; i < anchorList.Count; i++)
             {
-                // The modulo (%) wraps the index back to 0 when it reaches the end of the list.
-                // This connects the final anchor back to the first anchor to close the physical loop.
                 int nextIndex = (i + 1) % anchorList.Count;
 
                 Vector3 p1 = anchorList[i].transform.position;
@@ -93,7 +91,8 @@ public class VisualTaskManager : MonoBehaviour
 
     //SetMode(); // Handled by StudyFlowManager
     // Deactivate all to start cleanly
-    DeactivateAllCanvases();
+    if(!DebugMode.instance.DebugOn)
+        DeactivateAllCanvases();
 }
 
 
@@ -185,6 +184,14 @@ public class VisualTaskManager : MonoBehaviour
     }
 
 
+    public void Highlight(int lineID)
+    {
+        foreach (var chartVisualizer in activeVisualizers)
+        {
+            chartVisualizer.Highlight(lineID);
+        }
+    }
+    
     public void GenerateNewTrial()
     {
         float[] line1 = new float[5];
@@ -274,7 +281,8 @@ public class VisualTaskManager : MonoBehaviour
                 Debug.Log($"<color=red>Visual Task: Incorrect! (Guessed {guess}, Truth was {correctTargetLine})</color>");
             }
             
-            GenerateNewTrial();
+            Highlight(guess);
+            //GenerateNewTrial();
         }
     }
 

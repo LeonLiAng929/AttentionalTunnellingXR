@@ -175,8 +175,8 @@ public class HazardSpawner : MonoBehaviour
     /// </summary>
     private bool IsInsideArena(Vector3 position)
     {
-        //if (DimensionVisualiser.instance == null || DimensionVisualiser.instance.anchorList == null || DimensionVisualiser.instance.anchorList.Count == 0) return true;
-
+        
+        //for debug
         //List<Transform> anchorList = studyManager.debugAnchorList;
         List<OVRSpatialAnchor> anchorList = DimensionVisualiser.instance.anchorList;
         float minX = float.MaxValue, maxX = float.MinValue;
@@ -192,7 +192,7 @@ public class HazardSpawner : MonoBehaviour
         }
 
         // Adding a 2.0 meter padding to allow hazards to spawn slightly outside the node boundary box
-        float padding = 2.0f;
+        float padding = 1.5f;
 
         return position.x >= (minX - padding) && position.x <= (maxX + padding) &&
                position.z >= (minZ - padding) && position.z <= (maxZ + padding);

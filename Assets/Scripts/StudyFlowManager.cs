@@ -28,6 +28,12 @@ public class StudyFlowManager : MonoBehaviour
     {
         hazardSpawner = FindObjectOfType<HazardSpawner>();
         visualTaskManager = FindObjectOfType<VisualTaskManager>();
+        if (DebugMode.instance.DebugOn)
+        {
+            StudyManager.instance.PathMapping();
+            PrepareStudy();
+            StartCoroutine(StartCountdown());
+        }
     }
 
     void Update()

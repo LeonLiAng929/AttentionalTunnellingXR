@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LineChartVisualizer : MonoBehaviour
@@ -7,12 +8,18 @@ public class LineChartVisualizer : MonoBehaviour
     public Color colorLine2 = Color.blue;
     public GameObject circleMarkerPrefab;
     public GameObject linePrefab;
-    private float horizontalPointGapFactor = 1.3f;
-    private float physicalChartHeight = 5*1.3f;
+    public Material highlightMaterial1;
+    public Material highlightMaterial2;
+    public Material normalMaterial;
+    private Material normalMaterial1;
+    private Material normalMaterial2;
+    private float horizontalPointGapFactor;
+    private float physicalChartWidth = 4.5f;
+    private float physicalChartHeight = 2f; 
     
-    [Tooltip("The thickness of the connecting line segments.")]
-    public float lineThickness;
-    
+    //[Tooltip("The thickness of the connecting line segments.")]
+    private float lineThickness = 0.1f;
+    private float markerSize = 0.3f;
     [Tooltip("The maximum Y value (used to map data points to the top of the chart area).")]
     private float maxYValue = 15f;
 
@@ -27,16 +34,21 @@ public class LineChartVisualizer : MonoBehaviour
 
     void Awake()
     {
+        horizontalPointGapFactor = physicalChartWidth / 4f; // 4 gaps between 5 points
         // Instantiate markers (5 per line)
         for (int i = 0; i < 5; i++)
         {
             GameObject tempm1 = Instantiate(circleMarkerPrefab, transform);
             tempm1.GetComponent<MeshRenderer>().material.color = colorLine1;
+            tempm1.transform.localScale = Vector3.one * markerSize;
             markersLine1[i] = tempm1;
             
             GameObject tempm2 = Instantiate(circleMarkerPrefab, transform);
             tempm2.GetComponent<MeshRenderer>().material.color = colorLine2;
+            tempm2.transform.localScale = Vector3.one * markerSize;
             markersLine2[i] = tempm2;
+            normalMaterial1 = new Material(normalMaterial) { color = colorLine1 };
+            normalMaterial2 = new Material(normalMaterial) { color = colorLine2 };
         }
         
         // Instantiate lines (4 per line)
@@ -51,10 +63,85 @@ public class LineChartVisualizer : MonoBehaviour
             lines2[i] = templ2;
         }
         
-        lineThickness = .5f;
+        //lineThickness = .5f;
         linePrefab.SetActive(false); 
         circleMarkerPrefab.SetActive(false);
         
+    }
+
+    public void Highlight(int lineID)
+    {
+        if (lineID == 1)
+        {
+            foreach (var line in lines1)
+            {
+                line.GetComponent<MeshRenderer>().material = highlightMaterial1;
+            }
+
+            foreach (var marker in markersLine1)
+            {
+                marker.GetComponent<MeshRenderer>().material = highlightMaterial1;
+            }
+            
+            foreach (var line in lines2)
+            {
+                line.GetComponent<MeshRenderer>().material = normalMaterial2;
+                
+            }
+
+            foreach (var marker in markersLine2)
+            {
+                marker.GetComponent<MeshRenderer>().material = normalMaterial2;
+            }
+        }
+        else if (lineID == 2)
+        {
+            foreach (var line in lines2)
+            {
+                line.GetComponent<MeshRenderer>().material = highlightMaterial2;
+            }
+
+            foreach (var marker in markersLine2)
+            {
+                marker.GetComponent<MeshRenderer>().material = highlightMaterial2;
+            }
+            
+            foreach (var line in lines1)
+            {
+                line.GetComponent<MeshRenderer>().material = normalMaterial1;
+                
+            }
+
+            foreach (var marker in markersLine1)
+            {
+                marker.GetComponent<MeshRenderer>().material = normalMaterial1;
+            }
+            
+        }
+    }
+
+    public void ResetHighlight()
+    {
+        foreach (var line in lines1)
+        {
+            line.GetComponent<MeshRenderer>().material = normalMaterial1;
+                
+        }
+
+        foreach (var marker in markersLine1)
+        {
+            marker.GetComponent<MeshRenderer>().material = normalMaterial1;
+        }
+        foreach (var line in lines2)
+        {
+            line.GetComponent<MeshRenderer>().material = normalMaterial2;
+                
+        }
+
+        foreach (var marker in markersLine2)
+        {
+            marker.GetComponent<MeshRenderer>().material = normalMaterial2;
+        }
     }
 
     public void UpdateChart(float[] line1Values, float[] line2Values)
@@ -98,6 +185,8 @@ public class LineChartVisualizer : MonoBehaviour
             UpdateLineSegment(lines1[i], line1Positions[i], line1Positions[i + 1]);
             UpdateLineSegment(lines2[i], line2Positions[i], line2Positions[i + 1]);
         }
+        
+        ResetHighlight();
     }
 
     /// <summary>

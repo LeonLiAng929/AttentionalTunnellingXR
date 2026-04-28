@@ -2793,7 +2793,7 @@ MonoBehaviour:
   focalCanvas: {fileID: 1280763754}
   ambientCanvases: []
   ambientCanvasesContainer: {fileID: 888076007}
-  ambientScale: {x: 1.5, y: 1.5, z: 0.001}
+  ambientScale: {x: 1, y: 1, z: 0.001}
   ambientBackwardOffset: 1.5
   visPrefab: {fileID: 8437526446006346710, guid: d622fad28bf20ab429ff425ed8c5e2b8, type: 3}
   isUpdatingActive: 0
@@ -7996,7 +7996,7 @@ MonoBehaviour:
     from: 0
     to: 0
     pathObject: {fileID: 0}
-  proximityThreshold: 0.5
+  proximityThreshold: 2
 --- !u!1 &1254113407
 GameObject:
   m_ObjectHideFlags: 0
@@ -8199,41 +8199,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8437526446006346710, guid: d622fad28bf20ab429ff425ed8c5e2b8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1280763758}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d622fad28bf20ab429ff425ed8c5e2b8, type: 3}
 --- !u!1 &1280763754 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8437526446006346710, guid: d622fad28bf20ab429ff425ed8c5e2b8, type: 3}
   m_PrefabInstance: {fileID: 1280763753}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1280763758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280763754}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84b31f90ca3e8154d8bb9e4c37e871b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ARJogger.SmoothFollow
-  Anchor: 7
-  FollowSpeed: 20
-  AlwaysStayInSight: 1
-  defaultDistance: 1.5
-  defaultHeight: 0
-  defaultRotation: {x: 0, y: 0}
-  HorizontalRotation: {x: 0, y: 0, z: 0, w: 0}
-  HorizontalRotationInverse: {x: 0, y: 0, z: 0, w: 0}
-  VerticalRotation: {x: 0, y: 0, z: 0, w: 0}
-  VerticalRotationInverse: {x: 0, y: 0, z: 0, w: 0}
-  Offset: {x: 0, y: 0.1}
-  init: 1
-  CenterCamera: {fileID: 972678908}
 --- !u!1 &1281167514
 GameObject:
   m_ObjectHideFlags: 0
@@ -10327,6 +10299,51 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 71658175}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1657079649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1657079651}
+  - component: {fileID: 1657079650}
+  m_Layer: 0
+  m_Name: DebugMode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1657079650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657079649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dabfcf9580e1c242b33bd9a982ed305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  DebugOn: 0
+--- !u!4 &1657079651
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657079649}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1687643452
 GameObject:
@@ -12531,7 +12548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2105674698
 Transform:
   m_ObjectHideFlags: 0
@@ -12983,3 +13000,4 @@ SceneRoots:
   - {fileID: 888076007}
   - {fileID: 1007934177}
   - {fileID: 2141427998}
+  - {fileID: 1657079651}

@@ -9,13 +9,11 @@ public class DimensionVisualiser : MonoBehaviour
     public static DimensionVisualiser instance;
     public GameObject dimensionVisualPrefab;
     public SpatialAnchorCoreBuildingBlock _spatialAnchorCore;
-    private OVRCameraRig _cameraRig;
     public List<OVRSpatialAnchor> anchorList = new List<OVRSpatialAnchor>();
     public List<GameObject> visualiserObjects = new List<GameObject>();
     private void Awake()
     {
         instance = this;
-        _cameraRig = FindAnyObjectByType<OVRCameraRig>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -60,7 +58,7 @@ public class DimensionVisualiser : MonoBehaviour
             Destroy(go);
         }
    
-        for (int i = 0; i < anchorList.Count; i++)
+        /*for (int i = 0; i < anchorList.Count; i++)
         {
             for (int j = i + 1; j < anchorList.Count; j++)
             {
@@ -77,7 +75,7 @@ public class DimensionVisualiser : MonoBehaviour
                 dimensionText.gameObject.transform.position = midPoint;
                 visualiserObjects.Add(go);
             }
-        }
+        }*/
         
         
     }
