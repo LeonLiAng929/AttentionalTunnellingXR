@@ -1,11 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class StudyFlowManager : MonoBehaviour
 {
     
     public AudioSource startSound;
     public AudioSource endSound;
+    public TMP_Text endLog;
     public enum StudyState
     {
         Idle,
@@ -23,6 +25,16 @@ public class StudyFlowManager : MonoBehaviour
 
     private HazardSpawner hazardSpawner;
     private VisualTaskManager visualTaskManager;
+    private float conditionStartTime = 0f;
+
+    public float GetConditionTime()
+    {
+        if (currentState == StudyState.Running)
+        {
+            return Time.time - conditionStartTime;
+        }
+        return 0f;
+    }
 
     void Start()
     {
@@ -47,6 +59,7 @@ public class StudyFlowManager : MonoBehaviour
         if (OVRInput.GetDown(OVRInput.RawButton.LThumbstickUp))
         {
             PrepareStudy();
+            endLog.gameObject.SetActive(false);
         }
 
         if (currentState == StudyState.Prepared && OVRInput.GetDown(OVRInput.RawButton.RThumbstickUp))
@@ -61,9 +74,25 @@ public class StudyFlowManager : MonoBehaviour
         if (currentState == StudyState.Running || currentState == StudyState.Starting) return;
 
         // In the future, this will read from CentralDataLogger
-        int condition = testConditionIndex;
+        int condition = CentralDataLogger.Instance != null ? CentralDataLogger.Instance.currentConditionIndex : testConditionIndex;
         
         Debug.Log($"<color=cyan>[StudyFlowManager] Preparing condition: {condition}</color>");
+
+        if (DimensionVisualiser.instance != null && DimensionVisualiser.instance.anchorList != null && DimensionVisualiser.instance.anchorList.Count >= 2)
+        {
+            if (SpatialAligner.Instance != null)
+            {
+                SpatialAligner.Instance.SetAnchors(DimensionVisualiser.instance.anchorList[0].transform, DimensionVisualiser.instance.anchorList[1].transform);
+            }
+            else
+            {
+                Debug.LogWarning("[StudyFlowManager] SpatialAligner Instance is missing in the scene!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[StudyFlowManager] Anchors not loaded or not enough anchors. Cannot align spatial coordinates.");
+        }
 
         if (visualTaskManager != null)
         {
@@ -71,6 +100,7 @@ public class StudyFlowManager : MonoBehaviour
         }
 
         currentState = StudyState.Prepared;
+        if (CentralDataLogger.Instance != null) CentralDataLogger.Instance.UpdateSessionInfo();
     }
 
     private IEnumerator StartCountdown()
@@ -84,6 +114,8 @@ public class StudyFlowManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         currentState = StudyState.Running;
+        conditionStartTime = Time.time;
+        if (CentralDataLogger.Instance != null) CentralDataLogger.Instance.UpdateSessionInfo();
         Debug.Log("<color=green>[StudyFlowManager] Study Running!</color>");
 
         if (hazardSpawner != null)
@@ -105,6 +137,7 @@ public class StudyFlowManager : MonoBehaviour
             if (hazardSpawner != null && hazardSpawner.isPhaseComplete)
             {
                 currentState = StudyState.Completed;
+                if (CentralDataLogger.Instance != null) CentralDataLogger.Instance.UpdateSessionInfo();
                 Debug.Log("<color=magenta>[StudyFlowManager] Phase Complete! Stopping updates.</color>");
                 endSound.Play();
                 hazardSpawner.isSpawningActive = false;
@@ -112,8 +145,14 @@ public class StudyFlowManager : MonoBehaviour
                 {
                     visualTaskManager.isUpdatingActive = false;
                 }
-
-                // In the future: call CentralDataLogger.SaveAndAdvance()
+                
+                endLog.gameObject.SetActive(true);
+                endLog.text = $"Condition {CentralDataLogger.Instance.currentConditionIndex} Complete!\nPlease take off your headset\nUID: {CentralDataLogger.Instance.currentUserID}";
+                
+                if (CentralDataLogger.Instance != null)
+                {
+                    CentralDataLogger.Instance.SaveAndAdvance();
+                }
             }
         }
     }

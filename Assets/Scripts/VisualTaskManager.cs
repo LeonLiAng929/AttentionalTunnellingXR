@@ -9,7 +9,7 @@ public class VisualTaskManager : MonoBehaviour
     [Header("Configuration")]
     public CanvasAnchorBehaviour.AnchorMode currentStudyMode = CanvasAnchorBehaviour.AnchorMode.Focal;
     //public GameObject visPrefab;
-    public float updateInterval = 3.0f;
+    public float updateInterval = 4.0f;
     public float maxGeneratedDataValue = 15f;
 
     // Object Pooling
@@ -26,6 +26,10 @@ public class VisualTaskManager : MonoBehaviour
     public float  ambientBackwardOffset = 1.5f;
     public GameObject visPrefab;
     public bool isUpdatingActive = false;
+
+    private float[] currentLine1;
+    private float[] currentLine2;
+    private float currentTrialStartTime = 0f;
 
     private List<LineChartVisualizer> activeVisualizers = new List<LineChartVisualizer>();
 
@@ -242,6 +246,10 @@ public class VisualTaskManager : MonoBehaviour
         }
 
         // Push the new data to the active canvases
+        currentLine1 = line1;
+        currentLine2 = line2;
+        currentTrialStartTime = Time.time;
+
         foreach (var visualizer in activeVisualizers)
         {
             if (visualizer != null)
@@ -262,6 +270,7 @@ public class VisualTaskManager : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
+            CentralDataLogger.Instance?.LogVisualEvent(currentLine1, currentLine2, -1, correctTargetLine, updateInterval);
             GenerateNewTrial();
         }
 
@@ -271,7 +280,10 @@ public class VisualTaskManager : MonoBehaviour
 
         if (guessedLine1 || guessedLine2)
         {
+            float timeTaken = Time.time - currentTrialStartTime;
             int guess = guessedLine1 ? 1 : 2;
+            CentralDataLogger.Instance?.LogVisualEvent(currentLine1, currentLine2, guess, correctTargetLine, timeTaken);
+
             if (guess == correctTargetLine)
             {
                 Debug.Log($"<color=green>Visual Task: Correct! (Guessed {guess})</color>");

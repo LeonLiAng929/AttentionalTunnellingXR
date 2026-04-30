@@ -24,6 +24,8 @@ public class HazardSpawner : MonoBehaviour
     private float timer = 0f;
     private float currentSpawnInterval = 0f;
     private GameObject currentHazardInstance = null;
+    private float currentHazardSpawnTime = 0f;
+    private float falsePositiveCooldown = 0f;
     
     public bool isPhaseComplete = false;
     public bool isSpawningActive = false;
@@ -40,6 +42,7 @@ public class HazardSpawner : MonoBehaviour
 
     void Update()
     {
+        falsePositiveCooldown -= Time.deltaTime;
         HandleDestructionLifecycle();
 
         if (isPhaseComplete) return;
@@ -70,11 +73,25 @@ public class HazardSpawner : MonoBehaviour
         // Check for Index Trigger input on either controller
         bool indexTriggerPressed = OVRInput.GetDown(OVRInput.RawButton.LIndexTrigger) || OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
 
-        if (currentHazardInstance != null && indexTriggerPressed)
+        if (indexTriggerPressed)
         {
-            // Destroy immediately. Do not reset timer; wait for interval to complete.
-            Destroy(currentHazardInstance);
-            currentHazardInstance = null;
+            if (currentHazardInstance != null)
+            {
+                HazardBehaviour hazardBehaviour = currentHazardInstance.GetComponent<HazardBehaviour>();
+                string profile = hazardBehaviour != null ? hazardBehaviour.currentProfile.ToString() : "Unknown";
+                float reactionTime = Time.time - currentHazardSpawnTime;
+
+                CentralDataLogger.Instance?.LogHazardEvent("Reacted", reactionTime, currentHazardInstance.transform.position, profile);
+
+                // Destroy immediately. Do not reset timer; wait for interval to complete.
+                Destroy(currentHazardInstance);
+                currentHazardInstance = null;
+            }
+            else if (falsePositiveCooldown <= 0f && isSpawningActive)
+            {
+                CentralDataLogger.Instance?.LogHazardEvent("FalsePositive", 0f, Vector3.zero, "None");
+                falsePositiveCooldown = 0.5f;
+            }
         }
     }
 
@@ -126,8 +143,8 @@ public class HazardSpawner : MonoBehaviour
         Vector3 spawnPos = userPos + (spawnDirection * spawnDistance);
 
         // 4. Set exact Y level to the calibrated eye level
-        spawnPos.y = PlayerTelemetryManager.Instance.calibratedEyeLevel;
-
+        //spawnPos.y = PlayerTelemetryManager.Instance.calibratedEyeLevel;
+        spawnPos.y = 1;
         // 5. Check if inside established spatial arena bounds
         if (!IsInsideArena(spawnPos))
         {
@@ -141,6 +158,10 @@ public class HazardSpawner : MonoBehaviour
             // Destroy any lingering old hazard that was ignored
             if (currentHazardInstance != null)
             {
+                HazardBehaviour oldBehaviour = currentHazardInstance.GetComponent<HazardBehaviour>();
+                string oldProfile = oldBehaviour != null ? oldBehaviour.currentProfile.ToString() : "Unknown";
+                CentralDataLogger.Instance?.LogHazardEvent("Missed", Time.time - currentHazardSpawnTime, currentHazardInstance.transform.position, oldProfile);
+
                 Destroy(currentHazardInstance);
                 currentHazardInstance = null;
             }
@@ -148,6 +169,7 @@ public class HazardSpawner : MonoBehaviour
             // Spawn the hazard
             GameObject hazardObj = Instantiate(hazardPrefab, spawnPos, Quaternion.identity);
             currentHazardInstance = hazardObj;
+            currentHazardSpawnTime = Time.time;
 
             HazardBehaviour hazardBehaviour = hazardObj.GetComponent<HazardBehaviour>();
             if (hazardBehaviour != null)
