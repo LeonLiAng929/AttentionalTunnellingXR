@@ -1,9 +1,3 @@
-
-https://github.com/user-attachments/assets/14c7ba56-85a1-44fe-8115-23210f913ec2
-
-https://github.com/user-attachments/assets/065534a0-570d-4669-aeb3-a4728e850753
-
-https://github.com/user-attachments/assets/b4424630-caf4-4394-9755-0ab6e2b09969
 # Attentional Tunnelling in Mixed Reality (XR)
 
 ## Purpose of the Research
