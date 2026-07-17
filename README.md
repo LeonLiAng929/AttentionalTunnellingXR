@@ -1,3 +1,9 @@
+
+https://github.com/user-attachments/assets/14c7ba56-85a1-44fe-8115-23210f913ec2
+
+https://github.com/user-attachments/assets/065534a0-570d-4669-aeb3-a4728e850753
+
+https://github.com/user-attachments/assets/b4424630-caf4-4394-9755-0ab6e2b09969
 # Attentional Tunnelling in Mixed Reality (XR)
 
 ## Purpose of the Research
@@ -19,21 +25,48 @@ Participants in this study are required to balance two competing tasks while phy
 ## Project Implementation & Architecture
 
 ### 1. Spatial Anchoring & Routing
-* **`DimensionVisualiser` & `StudyManager`**: Utilizes the Meta XR SDK to load user-placed physical spatial anchors, defining a safe, boundaryless walkable arena. The system procedurally generates and highlights navigation routes between these physical anchors to guide the participant through the physical space.
-* **`SpatialAligner`**: A mathematical utility that translates raw headset and controller tracking coordinates into a "Standardized Space." By establishing the first two spatial anchors as a strict origin and Z-forward axis (ignoring height variations), it ensures that all collected telemetry data remains perfectly consistent across different participants, regardless of how the physical anchors were mapped in the real world.
+* **`DimensionVisualiser` & `StudyManager`**: Utilises the Meta XR SDK to load user-placed physical spatial anchors, defining a safe, boundaryless walkable arena. The system procedurally generates and highlights navigation routes between these physical anchors to guide the participant through the physical space.
+* **`SpatialAligner`**: A mathematical utility that translates raw headset and controller tracking coordinates into a "Standardised Space." By establishing the first two spatial anchors as a strict origin and Z-forward axis (ignoring height variations), it ensures that all collected telemetry data remains perfectly consistent across different participants, regardless of how the physical anchors were mapped in the real world.
 
 ### 2. The Primary Task Visual
 * **`CanvasAnchorBehaviour`**: The UI for the visual line charts shifts between 4 specific spatial paradigms (Conditions) to manipulate where the user must focus:
   * **Peripersonal**: Attached directly to the user's hand/controller.
+ 
+
+https://github.com/user-attachments/assets/f65d5d57-1a09-40d2-8f94-ae21dd62ea50
+
+    
   * **Focal**: Locked to the user's direct gaze at a set depth.
+    
+
+
+https://github.com/user-attachments/assets/d2da2528-2870-4f90-a171-187f3c03a67a
+
+
+
   * **Action**: Placed at a fixed distance, mapped onto the ground and following the user's body rotation (headset yaw).
+
+
+
+https://github.com/user-attachments/assets/d0087dcc-e9a4-4c98-b8bd-c72111c61e11
+
+
+    
   * **Ambient**: World-locked along the route midpoints in the physical room.
+
+
+
+
+
+https://github.com/user-attachments/assets/d4e4edd8-e9e2-46e1-a2f3-51f7b1700fb3
+
+
   * *(A fifth **Trial Mode** enables all paradigms simultaneously for onboarding).*
   * The line chart updates every 4 seconds (configurable) regardless of the selection.
 ### 3. Hazard Simulation 
 The hazard system is strictly controlled to ensure consistent testing parameters:
 * **Spawning Logic**: 
-  * **Interval**: A new hazard attempts to spawn at a randomized interval between **4.0 and 10.0 seconds**.
+  * **Interval**: A new hazard attempts to spawn at a randomised interval between **4.0 and 10.0 seconds**.
   * **Location**: Hazards spawn exactly **10 meters** away from the user, set precisely at the user's calibrated eye level.
   * **Field of View**: They spawn within a **110-degree arc** (-55 to +55 degrees) relative to the forward vector of the route the user is currently walking.
   * **Boundaries**: Before spawning, the system verifies that the calculated spawn point falls within the physical arena bounds.
@@ -41,7 +74,7 @@ The hazard system is strictly controlled to ensure consistent testing parameters
   When a hazard spawns, it takes on one of three quota-based speed profiles and uses quadratic equations to perfectly calculate an interception trajectory with the walking user.
   * **Static**: 0 km/h (0 m/s). Representing static tripping hazards.
   * **Slow**: 4.5 km/h (1.25 m/s). Representing pedastrains
-  * **Fast**: 15.0 km/h (~4.17 m/s). Rrepresenting faster road users like cars.
+  * **Fast**: 15.0 km/h (~4.17 m/s). Representing faster road users like cars.
 * **Visuals & Size**: The hazard is represented by a red, 1m x 1m x 1m sphere.
 
 ### 4. Telemetry & Data Logging
@@ -62,6 +95,8 @@ The hazard system is strictly controlled to ensure consistent testing parameters
   **C. Telemetry Logs (`_TelemetryLog.csv`)**
   Records continuous, high-frequency spatial tracking data every physics frame (`FixedUpdate`).
   * **Absolute Tracking**: The user's Raw X/Y/Z Position, Raw Quaternion Rotation, and Raw Gaze Forward Vector in absolute world space.
-  * **Standardized Tracking**: The user's Aligned X/Y/Z Position, Aligned Quaternion Rotation, and Aligned Gaze Forward Vector, normalized against the physical room's anchor geometry to ensure identical coordinate spaces across all study participants.
+  * **Standardised Tracking**: The user's Aligned X/Y/Z Position, Aligned Quaternion Rotation, and Aligned Gaze Forward Vector, normalised against the physical room's anchor geometry to ensure identical coordinate spaces across all study participants.
 
-* Finally, the user's progression history is appended back to `UserInfo.csv` to seamlessly track completion and resume the study later.
+### 5. Subjective Data
+
+* NASA-TLX and Borg Scale, plus any additional comments in a post-hoc questionaire.
