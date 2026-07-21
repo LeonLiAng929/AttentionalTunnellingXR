@@ -65,3 +65,73 @@ The hazard system is strictly controlled to ensure consistent testing parameters
   * **Standardized Tracking**: The user's Aligned X/Y/Z Position, Aligned Quaternion Rotation, and Aligned Gaze Forward Vector, normalized against the physical room's anchor geometry to ensure identical coordinate spaces across all study participants.
 
 * Finally, the user's progression history is appended back to `UserInfo.csv` to seamlessly track completion and resume the study later.
+
+## Revised Study Design Alternatives (Discussion Draft)
+
+### Research framing
+
+The study investigates dual-task performance while participants are running. Participants perform the MR line-chart task while detecting and responding to abstract hazards. 
+
+The four MR content-placement strategies are inspired by Previc's model of three-dimensional interaction spaces:
+
+* **Peripersonal:** hand-attached content in near-body visuomotor space.
+* **Focal:** gaze-centred content supporting visual search and object recognition.
+* **Action:** ground-referenced content ahead of the participant in locomotor/action space.
+* **Ambient:** world-locked content in earth-fixed environmental space.
+
+
+### Research questions
+
+1. **Placement and hazard distance:** How do visualisation positioning strategy affect people's ability to detect and respond to hazard at different distances (depths) while running?
+2. **Hazard movement speed:** How does hazard movement speed affect detection and response performance while the user is also moving?
+
+### Study controls
+
+* **Participant pace:** Running speed is self-selected, recorded, and not experimentally manipulated. It should be analysed continuously, separating each participant's typical speed from event-level deviations, rather than dividing participants into arbitrary high- and low-speed groups.
+* **Spatial balance:** The five repetitions of each hazard configuration are balanced across far left, near left, centre, near right, and far right path-relative positions. The angular range should be within the FOV of the headset.
+* **Saliency:** Should we equalise the angular size or physical size of the hazards?
+
+### Alternative A: Two-stage design
+
+#### Stage 1 — Static hazards
+
+* Four visualisation positionings × three static onset distances, e.g., 3, 6, and 9 m.
+* Estimate the effects of visualisation, distance, and their interaction.
+* Select the vis positioning with the strongest hazard detection while maintaining non-inferior chart accuracy.
+* 5 repetitions of each configuration, balanced across path-relative positions.
+#### Stage 2 — Moving hazards
+
+* Compare static, low-speed, and high-speed hazards at a common 9 m onset distance, which move towards the participant's current position.
+* 5 repetitions of each configuration, balanced across path-relative positions.
+### Alternative B: Combined design
+
+The combined within-participant study uses five hazard configurations:
+
+1. Static at 3 m.
+2. Static at 6 m.
+3. Static at 9 m.
+4. Low-speed moving at 9 m.
+5. High-speed moving at 9 m.
+
+Each participant encounters five instances of every configuration under each visualisation:
+
+`5 configurations × 5 repetitions × 4 visualisations = 100 hazard events per participant`
+
+Two overlapping analyses are preregistered:
+
+* **Static-distance analysis:** Visualisation × Static Distance (3, 6, and 9 m).
+* **Hazard-speed analysis:** Visualisation × Hazard Speed (static, low, and high at 9 m).
+
+### Decisions to be made
+
+1. Select the two-stage or combined alternative.
+2. Define the five spatial angle ranges (or maybe fixed angles like -45, -20, 0, 20, 45?).
+4. Choose equal angular size or physical size.
+
+### Supporting literature
+
+* Previc, F. H. (1998). [The neuropsychology of 3-D space](https://pubmed.ncbi.nlm.nih.gov/9747184/). *Psychological Bulletin, 124*(2), 123–164.
+* Patla, A. E., & Vickers, J. N. (2003). [How far ahead do we look when required to step on specific locations in the travel path during locomotion?](https://pubmed.ncbi.nlm.nih.gov/12478404/) *Experimental Brain Research, 148*, 133–138.
+* Cullen, M. M., et al. (2020). [Gaze-behaviors of runners in a natural, urban running environment](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0233158). *PLOS ONE, 15*(5), e0233158.
+* Syiem, B. V., et al. (2021). [Impact of Task on Attentional Tunneling in Handheld Augmented Reality](https://doi.org/10.1145/3411764.3445580). *CHI '21*.
+* Song, J., et al. (2023). [Peripheral target detection can be modulated by target distance but not attended distance in 3D space simulated by monocular depth cues](https://doi.org/10.1016/j.visres.2022.108160). *Vision Research, 204*, 108160.

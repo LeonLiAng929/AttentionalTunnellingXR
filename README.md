@@ -94,3 +94,120 @@ The hazard system is strictly controlled to ensure consistent testing parameters
 ### 5. Subjective Data
 
 * NASA-TLX and Borg Scale, plus any additional comments in a post-hoc questionaire.
+
+## Revised Study Design Alternatives (Discussion Draft)
+
+> **Status:** This section records two alternatives for discussion with collaborators. Neither has been selected, and no code has been changed to implement either design.
+
+### Research framing
+
+The study investigates dual-task performance while participants run at a comfortable, self-selected pace. Participants perform the MR line-chart task while detecting and responding to abstract hazard proxies. Because awareness is inferred from a controller response, the observed outcome is described as **hazard-proxy detection and response**, rather than perception alone.
+
+The four MR content-placement strategies are inspired by Previc's functional model of three-dimensional behavioural spaces:
+
+* **Peripersonal:** hand-attached content in near-body visuomotor space.
+* **Focal:** gaze-centred content supporting visual search and object recognition.
+* **Action:** ground-referenced content ahead of the participant in locomotor/action space.
+* **Ambient:** world-locked content in earth-fixed environmental space.
+
+Previc's model provides the conceptual origin of the strategies but does not define fixed distance bands or establish a performance ranking. Locomotion research additionally motivates Action placement because walkers and runners use feedforward visual sampling to plan upcoming steps and obstacle negotiation. The implementations should therefore be described as MR anchoring strategies **inspired by** these theories, not as four gaze behaviours directly established in runners.
+
+### Shared research questions
+
+1. **Placement and static-hazard distance:** How do MR content-placement strategy and static hazard-onset distance affect people's ability to detect and respond to hazard proxies while running?
+2. **Hazard movement speed:** At a fixed onset distance, how does hazard movement speed affect detection and response performance, and does this effect depend on MR content-placement strategy?
+
+The distance-matching proposal—for example, whether Action performs especially well for hazards near its 5 m placement—will initially be treated as an exploratory interaction hypothesis. Existing evidence indicates that target distance and visual eccentricity affect peripheral detection, but does not establish a benefit from matching attended depth to target depth.
+
+### Shared experimental controls
+
+* **Participant pace:** Running speed is self-selected, recorded, and not experimentally manipulated. It should be analysed continuously, separating each participant's typical speed from event-level deviations, rather than dividing participants into arbitrary high- and low-speed groups.
+* **Order and recovery:** Visualisation order is Latin-square balanced. Borg exertion is recorded before and after blocks, and participants rest until reaching a preregistered recovery threshold, such as within one point of their initial baseline. Block order and rest duration remain analysis variables because balancing does not eliminate learning or fatigue.
+* **Random timing:** The next onset deadline is sampled uniformly between 4 and 10 seconds after the previous onset. This follows Syiem et al., who selected the range through pilot testing to reduce anticipation. The interval must also be piloted for the present running and chart task.
+* **Fixed deadline:** A selected onset deadline is not delayed while waiting for a convenient route location. Timing determines **when** an event occurs; constrained spatial randomisation determines **where and which** event occurs.
+* **Spatial balance:** The five repetitions of each hazard configuration are balanced across far left, near left, centre, near right, and far right path-relative positions. Exact angular ranges will be determined through venue testing.
+* **Common feasibility envelope:** At every deadline, eligible positions are checked using the maximum 9 m distance even when the event will appear at 3 or 6 m. The scheduler randomly selects from feasible, under-represented spatial bins. This prevents near hazards from receiving spatial opportunities unavailable to far hazards. Moving-event validation should include the trajectory, not only its spawn point.
+* **No feasibility-based waiting:** If venue tests find occasions with no valid 9 m position, the angles, route, or far distance will be revised before data collection. Reducing the far level to 8 m is preferable to extending the random interval.
+* **Saliency:** A depth-focused experiment should approximately equalise angular size, contrast, brightness, and onset behaviour. Constant physical size instead produces an ecological distance manipulation in which angular size naturally changes with distance.
+* **Outcomes:** Record hazard hits, response latency, false positives, chart accuracy, and chart response time. Misses should be modelled separately or as censored time-to-event observations. A best placement must preserve primary-task performance rather than optimise hazard latency alone.
+* **Terminology:** Repeated, expected events primarily measure attentional tunnelling or divided attention, not classical unexpected-event inattentional blindness. Headset orientation is head direction unless true eye tracking is added.
+
+### Alternative A: Two-stage design
+
+#### Stage 1 — Static hazards
+
+* Four visualisation strategies × three static onset distances, provisionally 3, 6, and 9 m.
+* Estimate the effects of visualisation, distance, and their interaction.
+* Select the strategy with the strongest hazard detection while maintaining non-inferior chart accuracy and acceptable chart response time.
+
+#### Stage 2 — Moving hazards
+
+* Compare static, low-speed, and high-speed hazards at a common 9 m onset distance.
+* To support an effectiveness claim, compare the selected strategy against a reference such as Focal under the same chart task. Testing only the selected strategy characterises robustness across speeds but cannot show superiority over another placement.
+* Preferably use a new participant sample or preregistered confirmatory subset so the same observations do not both select and confirm the winner.
+
+#### Advantages and limitations
+
+This design provides a clear discovery-then-confirmation narrative and lets the moving stage concentrate on fewer placement strategies. Independent Stage 2 data strengthen confirmation. Its disadvantages are longer project duration, additional recruitment or sessions, and the need to define the Stage 1 winner before Stage 2.
+
+### Alternative B: Combined design
+
+The combined within-participant study uses five hazard configurations:
+
+1. Static at 3 m.
+2. Static at 6 m.
+3. Static at 9 m.
+4. Low-speed moving at 9 m.
+5. High-speed moving at 9 m.
+
+Each participant encounters five instances of every configuration under each visualisation:
+
+`5 configurations × 5 repetitions × 4 visualisations = 100 hazard events per participant`
+
+The five repetitions map to the five balanced path-relative positions. Configurations and positions use constrained random order while retaining fixed random 4–10 second onset deadlines.
+
+Two overlapping analyses are preregistered:
+
+* **Static-distance analysis:** Visualisation × Static Distance (3, 6, and 9 m).
+* **Hazard-speed analysis:** Visualisation × Hazard Speed (static, low, and high at 9 m).
+
+Static-at-9 m is the shared reference cell and legitimately contributes to both analyses. The configurations should be analysed through these planned contrasts rather than as an uninterpreted five-level hazard factor.
+
+#### Advantages and limitations
+
+The combined design answers both questions in one session, retains all four visualisations as moving-hazard comparators, and avoids selecting a winner before collecting speed data. It is faster, but produces a denser session, more potential habituation across 100 events, and only five observations in each participant-level cell. Pilot testing and power simulation must verify the repetition and participant counts and check for ceiling effects.
+
+### Comparison
+
+| Consideration | Alternative A: Two-stage | Alternative B: Combined |
+| --- | --- | --- |
+| Narrative | Discovery followed by confirmation | Two linked questions in one experiment |
+| Participant burden | Split across stages or samples | One denser session |
+| Moving comparator | Must be added explicitly | All four visualisations remain available |
+| Selection bias | Reduced with independent confirmation | No winner is selected before speed analysis |
+| Project duration | Longer | Shorter |
+| Per-session complexity | Lower | Higher |
+| Power allocation | Can differ by stage | Five repetitions per cell require validation |
+
+### Interpretation of hazard speed
+
+At a common 9 m onset, faster hazards produce greater retinal motion or looming but less time before interception or closest approach. The analysis therefore estimates the overall ecological effect of hazard speed, not motion saliency isolated from response opportunity. Each moving event should record hazard speed, participant speed, relative speed, predicted time to interception or closest approach, and remaining time at response.
+
+### Decisions before implementation
+
+1. Select the two-stage or combined alternative.
+2. Confirm whether 9 m is feasible at every fixed deadline; otherwise consider 8 m.
+3. Define the five spatial angle ranges.
+4. Choose equal angular saliency or constant physical size.
+5. Define the moving-hazard response deadline and miss rule.
+6. Confirm low- and high-speed values and trajectory boundaries.
+7. Determine participants and repetitions using pilot-based power simulation.
+8. Define the Borg scale, recovery threshold, minimum rest, and stopping criteria.
+
+### Supporting literature
+
+* Previc, F. H. (1998). [The neuropsychology of 3-D space](https://pubmed.ncbi.nlm.nih.gov/9747184/). *Psychological Bulletin, 124*(2), 123–164.
+* Patla, A. E., & Vickers, J. N. (2003). [How far ahead do we look when required to step on specific locations in the travel path during locomotion?](https://pubmed.ncbi.nlm.nih.gov/12478404/) *Experimental Brain Research, 148*, 133–138.
+* Cullen, M. M., et al. (2020). [Gaze-behaviors of runners in a natural, urban running environment](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0233158). *PLOS ONE, 15*(5), e0233158.
+* Syiem, B. V., et al. (2021). [Impact of Task on Attentional Tunneling in Handheld Augmented Reality](https://doi.org/10.1145/3411764.3445580). *CHI '21*.
+* Song, J., et al. (2023). [Peripheral target detection can be modulated by target distance but not attended distance in 3D space simulated by monocular depth cues](https://doi.org/10.1016/j.visres.2022.108160). *Vision Research, 204*, 108160.
