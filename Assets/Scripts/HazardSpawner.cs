@@ -37,7 +37,7 @@ public class HazardSpawner : MonoBehaviour
             studyManager = FindObjectOfType<StudyManager>();
         }
 
-        SetNewRandomInterval();
+        ResetPhase();
     }
 
     void Update()
@@ -54,7 +54,12 @@ public class HazardSpawner : MonoBehaviour
         {
             if (AreAllQuotasMet())
             {
+                // The quota is incremented when a hazard spawns. If the final
+                // hazard was ignored, resolve it before completing the phase so
+                // every spawned hazard has a Reacted or Missed outcome.
+                ResolveCurrentHazardAsMissed();
                 isPhaseComplete = true;
+                isSpawningActive = false;
                 return;
             }
 
@@ -66,6 +71,43 @@ public class HazardSpawner : MonoBehaviour
     {
         currentSpawnInterval = Random.Range(4.0f, 10.0f);
         timer = 0f;
+    }
+
+    public void ResetPhase()
+    {
+        if (currentHazardInstance != null)
+        {
+            Destroy(currentHazardInstance);
+            currentHazardInstance = null;
+        }
+
+        spawnedStatic = 0;
+        spawnedSlow = 0;
+        spawnedFast = 0;
+        currentHazardSpawnTime = 0f;
+        falsePositiveCooldown = 0f;
+        isPhaseComplete = false;
+        isSpawningActive = false;
+
+        SetNewRandomInterval();
+    }
+
+    private void ResolveCurrentHazardAsMissed()
+    {
+        if (currentHazardInstance == null) return;
+
+        HazardBehaviour hazardBehaviour = currentHazardInstance.GetComponent<HazardBehaviour>();
+        string profile = hazardBehaviour != null ? hazardBehaviour.currentProfile.ToString() : "Unknown";
+        float timeVisible = Time.time - currentHazardSpawnTime;
+
+        CentralDataLogger.Instance?.LogHazardEvent(
+            "Missed",
+            timeVisible,
+            currentHazardInstance.transform.position,
+            profile);
+
+        Destroy(currentHazardInstance);
+        currentHazardInstance = null;
     }
 
     private void HandleDestructionLifecycle()
@@ -134,7 +176,7 @@ public class HazardSpawner : MonoBehaviour
         if (pathForward == Vector3.zero) return; // No active path to reference
 
         // 1. Pick a random angle within a 110-degree arc (-55 to +55 degrees)
-        float randomAngle = Random.Range(-55f, 55f);
+        float randomAngle = Random.Range(-50f, 50f);
         
         // 2. Rotate the path's forward vector around the Y axis by the random angle
         Vector3 spawnDirection = Quaternion.Euler(0, randomAngle, 0) * pathForward;
@@ -158,12 +200,7 @@ public class HazardSpawner : MonoBehaviour
             // Destroy any lingering old hazard that was ignored
             if (currentHazardInstance != null)
             {
-                HazardBehaviour oldBehaviour = currentHazardInstance.GetComponent<HazardBehaviour>();
-                string oldProfile = oldBehaviour != null ? oldBehaviour.currentProfile.ToString() : "Unknown";
-                CentralDataLogger.Instance?.LogHazardEvent("Missed", Time.time - currentHazardSpawnTime, currentHazardInstance.transform.position, oldProfile);
-
-                Destroy(currentHazardInstance);
-                currentHazardInstance = null;
+                ResolveCurrentHazardAsMissed();
             }
 
             // Spawn the hazard

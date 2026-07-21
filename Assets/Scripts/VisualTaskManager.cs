@@ -100,9 +100,9 @@ public class VisualTaskManager : MonoBehaviour
 }
 
 
-    public void SetModeByConditionIndex(int index)
+    public bool SetModeByConditionCode(int conditionCode)
     {
-        if (index == -1) // Trial Mode
+        if (conditionCode == -1) // Trial Mode
         {
             peripersonalCanvas.SetActive(true);
             actionCanvas.SetActive(true);
@@ -119,12 +119,37 @@ public class VisualTaskManager : MonoBehaviour
             }
             activeVisualizers.RemoveAll(v => v == null);
             GenerateNewTrial();
+            return true;
         }
-        else
+
+        // StudySchedule.csv uses an explicit code mapping that is independent
+        // of the AnchorMode enum's serialized numeric order.
+        switch (conditionCode)
         {
-            currentStudyMode = (CanvasAnchorBehaviour.AnchorMode)index;
-            SetMode();
+            case 0:
+                currentStudyMode = CanvasAnchorBehaviour.AnchorMode.Peripersonal;
+                break;
+            case 1:
+                currentStudyMode = CanvasAnchorBehaviour.AnchorMode.Focal;
+                break;
+            case 2:
+                currentStudyMode = CanvasAnchorBehaviour.AnchorMode.Ambient;
+                break;
+            case 3:
+                currentStudyMode = CanvasAnchorBehaviour.AnchorMode.Action;
+                break;
+            default:
+                Debug.LogError(
+                    $"[VisualTaskManager] Invalid condition code {conditionCode}. " +
+                    "Expected -1 for Trial Mode or 0-3 for an official condition.");
+                isUpdatingActive = false;
+                activeVisualizers.Clear();
+                DeactivateAllCanvases();
+                return false;
         }
+
+        SetMode();
+        return true;
     }
 
     public void SetMode()

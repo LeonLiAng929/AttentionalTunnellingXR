@@ -5,8 +5,8 @@ public class CanvasAnchorBehaviour : MonoBehaviour
     public enum AnchorMode
     {
         Peripersonal,
-        Action,
         Focal,
+        Action,
         Ambient
     }
 
@@ -15,7 +15,7 @@ public class CanvasAnchorBehaviour : MonoBehaviour
 
     [Header("Action Mode Settings")]
     [Tooltip("Distance between the canvas and the user when in Action mode.")]
-    public float actionDistance = 3.0f;
+    public float actionDistance = 5.0f;
     [Tooltip("Speed at which the canvas smoothly follows the user's body rotation and movement.")]
     public float actionSmoothSpeed = 20.0f;
 

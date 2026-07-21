@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.Serialization;
 
 public class StudyFlowManager : MonoBehaviour
 {
@@ -20,8 +21,9 @@ public class StudyFlowManager : MonoBehaviour
     public StudyState currentState = StudyState.Idle;
 
     [Header("Testing")]
-    [Tooltip("Temporary condition index for testing (-1 = Trial, 0-3 = Anchor Modes)")]
-    public int testConditionIndex = -1;
+    [FormerlySerializedAs("testConditionIndex")]
+    [Tooltip("Temporary condition code for testing (-1 = Trial, 0-3 = scheduled Anchor Modes)")]
+    public int testConditionCode = -1;
 
     private HazardSpawner hazardSpawner;
     private VisualTaskManager visualTaskManager;
@@ -73,10 +75,51 @@ public class StudyFlowManager : MonoBehaviour
     {
         if (currentState == StudyState.Running || currentState == StudyState.Starting) return;
 
-        // In the future, this will read from CentralDataLogger
-        int condition = CentralDataLogger.Instance != null ? CentralDataLogger.Instance.currentConditionIndex : testConditionIndex;
-        
-        Debug.Log($"<color=cyan>[StudyFlowManager] Preparing condition: {condition}</color>");
+        CentralDataLogger logger = CentralDataLogger.Instance;
+        int conditionIndex = logger != null
+            ? logger.currentConditionIndex
+            : (testConditionCode == -1 ? -1 : 0);
+        int conditionCode = logger != null
+            ? logger.currentConditionCode
+            : testConditionCode;
+
+        // Trial Mode is determined by study progression, not by a missing or
+        // malformed schedule code.
+        if (conditionIndex == -1)
+        {
+            conditionCode = -1;
+        }
+        else if (conditionIndex < 0 || conditionIndex > 3 || conditionCode < 0 || conditionCode > 3)
+        {
+            Debug.LogError(
+                $"[StudyFlowManager] Cannot prepare official condition. " +
+                $"Invalid index/code pair: {conditionIndex}/{conditionCode}. " +
+                "Check UserInfo.csv and StudySchedule.csv.");
+            currentState = StudyState.Idle;
+            return;
+        }
+
+        Debug.Log(
+            $"<color=cyan>[StudyFlowManager] Preparing condition index {conditionIndex}, " +
+            $"code {conditionCode}</color>");
+
+        if (visualTaskManager != null && !visualTaskManager.SetModeByConditionCode(conditionCode))
+        {
+            currentState = StudyState.Idle;
+            return;
+        }
+
+        if (hazardSpawner != null)
+        {
+            hazardSpawner.ResetPhase();
+        }
+
+        // Every condition begins from the same deterministic route. StartRoute
+        // safely returns when path mapping has not been completed yet.
+        if (StudyManager.instance != null)
+        {
+            StudyManager.instance.StartRoute();
+        }
 
         if (DimensionVisualiser.instance != null && DimensionVisualiser.instance.anchorList != null && DimensionVisualiser.instance.anchorList.Count >= 2)
         {
@@ -92,11 +135,6 @@ public class StudyFlowManager : MonoBehaviour
         else
         {
             Debug.LogWarning("[StudyFlowManager] Anchors not loaded or not enough anchors. Cannot align spatial coordinates.");
-        }
-
-        if (visualTaskManager != null)
-        {
-            visualTaskManager.SetModeByConditionIndex(condition);
         }
 
         currentState = StudyState.Prepared;
@@ -147,11 +185,20 @@ public class StudyFlowManager : MonoBehaviour
                 }
                 
                 endLog.gameObject.SetActive(true);
-                endLog.text = $"Condition {CentralDataLogger.Instance.currentConditionIndex} Complete!\nPlease take off your headset\nUID: {CentralDataLogger.Instance.currentUserID}";
-                
-                if (CentralDataLogger.Instance != null)
+
+                CentralDataLogger logger = CentralDataLogger.Instance;
+                if (logger != null)
                 {
-                    CentralDataLogger.Instance.SaveAndAdvance();
+                    string completedLabel = logger.currentConditionIndex == -1
+                        ? "Trial Mode"
+                        : $"Condition {logger.currentConditionCode} (run {logger.currentConditionIndex + 1}/4)";
+
+                    endLog.text = $"{completedLabel} Complete!\nPlease take off your headset\nUID: {logger.currentUserID}";
+                    logger.SaveAndAdvance();
+                }
+                else
+                {
+                    endLog.text = "Condition Complete!\nPlease take off your headset";
                 }
             }
         }
