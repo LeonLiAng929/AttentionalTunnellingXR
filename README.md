@@ -5,6 +5,7 @@ Attentional Tunnelling (also known as cognitive tunnelling or inattentional blin
 
 This project is a Unity-based Mixed Reality (MR) research application designed to measure and analyze attentional tunnelling in a gym-scale environment. By manipulating the spatial placement and depth of a primary visual task, the study evaluates how different Augmented Reality (AR) UI paradigms affect a user's situational awareness, spatial navigation, and reaction times to physical hazards. 
 
+
 ## The Study Task
 Participants in this study are required to balance two competing tasks while physically walking through a room:
 
@@ -25,9 +26,13 @@ Participants in this study are required to balance two competing tasks while phy
 ### 2. The Primary Task Visual
 * **`CanvasAnchorBehaviour`**: The UI for the visual line charts shifts between 4 specific spatial paradigms (Conditions) to manipulate where the user must focus:
   * **Peripersonal**: Attached directly to the user's hand/controller.
+  * https://github.com/user-attachments/assets/f65d5d57-1a09-40d2-8f94-ae21dd62ea50
   * **Focal**: Locked to the user's direct gaze at a set depth.
+  * https://github.com/user-attachments/assets/d2da2528-2870-4f90-a171-187f3c03a67a
   * **Action**: Placed at a fixed distance, mapped onto the ground and following the user's body rotation (headset yaw).
+  * https://github.com/user-attachments/assets/d0087dcc-e9a4-4c98-b8bd-c72111c61e11
   * **Ambient**: World-locked along the route midpoints in the physical room.
+  * https://github.com/user-attachments/assets/d4e4edd8-e9e2-46e1-a2f3-51f7b1700fb3
   * *(A fifth **Trial Mode** enables all paradigms simultaneously for onboarding).*
   * The line chart updates every 4 seconds (configurable) regardless of the selection.
 ### 3. Hazard Simulation 
